@@ -1,0 +1,26 @@
+# Template file for 'python3-pyo'
+pkgname=python3-pyo
+version=1.0.6
+revision=1
+archs="*"
+wrksrc="pyo-${version}"
+build_style=python3-pep517
+hostmakedepends="python3-setuptools python3-wheel python3-build python3-installer"
+makedepends="python3-devel liblo-devel libsndfile-devel portaudio-devel portmidi-devel pipewire-devel alsa-lib-devel"
+depends="python3 pipewire liblo libsndfile portaudio portmidi"
+short_desc="Python DSP library with realtime audio support"
+maintainer="Your Name <you@example.com>"
+license="LGPL-3.0-or-later"
+homepage="https://github.com/belangeo/pyo"
+distfiles="https://github.com/belangeo/pyo/archive/refs/tags/${version}.tar.gz"
+checksum="6433ec2de14177a1938711d161501b00fe90974df06e10e81f46ecfb0707df1f"
+
+# Override do_build to pass --config-setting
+do_build() {
+    python3 -m build --wheel --no-isolation \
+        --config-setting="--build-option=--use-jack"
+}
+
+do_install() {
+    python3 -m installer --destdir="$DESTDIR" dist/*.whl
+}
